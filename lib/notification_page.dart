@@ -47,10 +47,10 @@ class _NotificationPageState extends State<NotificationPage> {
           return Dismissible(
             onDismissed: (direction) async {
               await databaseService.deleteNotification(NotificationInfo(
-                name: list[index].name,
-                dateTime: list[index].dateTime,
-                enabled: false,
-              ));
+                  name: list[index].name,
+                  dateTime: list[index].dateTime,
+                  enabled: false,
+                  interval: list[index].interval));
               setState(() {
                 list.removeAt(index);
               });
@@ -63,18 +63,18 @@ class _NotificationPageState extends State<NotificationPage> {
                 onChanged: (value) async {
                   // Update the database
                   await databaseService.updateNOfication(NotificationInfo(
-                    name: list[index].name,
-                    dateTime: list[index].dateTime,
-                    enabled: value,
-                  ));
+                      name: list[index].name,
+                      dateTime: list[index].dateTime,
+                      enabled: value,
+                      interval: list[index].interval));
 
                   // Update the in-memory list
                   setState(() {
                     list[index] = NotificationInfo(
-                      name: list[index].name,
-                      dateTime: list[index].dateTime,
-                      enabled: value,
-                    );
+                        name: list[index].name,
+                        dateTime: list[index].dateTime,
+                        enabled: value,
+                        interval: list[index].interval);
                   });
                 }),
           );
@@ -94,14 +94,21 @@ class _NotificationPageState extends State<NotificationPage> {
                     NotificationInfo(
                         name: info.name,
                         dateTime: info.dateTime,
-                        enabled: info.enabled)
+                        enabled: info.enabled,
+                        interval: info.interval)
                   ]);
-                  await scheduleDailyNotificationFromDate(
-                    info.dateTime,
-                    'Daily Reminder ${info.name}',
-                    'This is your daily notification starting from tomorrow!',
-                    info.dateTime,
-                  );
+                  // await scheduleDailyNotificationFromDate(
+                  //   info.dateTime,
+                  //   'Daily Reminder ${info.name}',
+                  //   'This is your daily notification starting from tomorrow!',
+                  //   info.dateTime,
+                  // );
+                  await scheduleNotificationsEveryXDays(
+                      info.dateTime,
+                      'Daily Reminder ${info.name}',
+                      'This is your daily notification starting from tomorrow!',
+                      10,
+                      info.interval);
                   if (!context.mounted) return;
                   showSnackBar(
                       context: context,

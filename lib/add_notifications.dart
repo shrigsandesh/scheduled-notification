@@ -14,6 +14,7 @@ class AddNotifications extends StatefulWidget {
 class _AddNotificationsState extends State<AddNotifications> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
+  final TextEditingController _intervalController = TextEditingController();
 
   DateTime? pickedDateTime;
   String? name;
@@ -42,6 +43,17 @@ class _AddNotificationsState extends State<AddNotifications> {
             ),
             TextField(
               controller: _nameController,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            const Text(
+              'Pick repeated interval(in days)',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            TextField(
+              controller: _intervalController,
+              keyboardType: TextInputType.number,
             ),
             const SizedBox(
               height: 12,
@@ -86,7 +98,9 @@ class _AddNotificationsState extends State<AddNotifications> {
                       widget.onDatePicked(NotificationInfo(
                           name: _nameController.text,
                           dateTime: pickedDateTime!,
-                          enabled: true));
+                          enabled: true,
+                          interval:
+                              int.tryParse(_intervalController.text) ?? 1));
                     },
                     child: const Text('Save'))),
           ],
